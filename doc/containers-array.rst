@@ -1,3 +1,7 @@
+===
+class Corrade::Containers::Array
+===
+
 .. doxygenclass:: Corrade::Containers::Array
   :project: Corrade
   :members:
