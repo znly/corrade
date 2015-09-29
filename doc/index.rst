@@ -2,6 +2,5 @@
 What
 ====
 
-.. doxygennamespace:: Corrade
+.. doxygenindex::
   :project: Corrade
-  :members:
