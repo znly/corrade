@@ -14,6 +14,7 @@ cmake --build . --target install -- -j || exit /b
 
 rem Test
 cd %APPVEYOR_BUILD_FOLDER%/build || exit /b
+set CORRADE_TEST_COLOR=ON
 ctest -V || exit /b
 
 rem Examples

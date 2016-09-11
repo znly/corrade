@@ -13,6 +13,7 @@ cmake --build . || exit /b
 cmake --build . --target install || exit /b
 
 rem Test
+set CORRADE_TEST_COLOR=ON
 ctest -V || exit /b
 
 rem Examples
