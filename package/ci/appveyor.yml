@@ -8,6 +8,10 @@ environment:
   matrix:
   - TARGET: desktop
     ANSI_COLORS: ON
+    CONFIGURATION: Debug
+  - TARGET: desktop
+    ANSI_COLORS: ON
+    CONFIGURATION: Release
   - TARGET: desktop
     ANSI_COLORS: OFF
   - TARGET: desktop-mingw
