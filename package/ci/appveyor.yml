@@ -14,6 +14,7 @@ environment:
     CONFIGURATION: Release
   - TARGET: desktop
     ANSI_COLORS: OFF
+    CONFIGURATION: Debug
   - TARGET: desktop-mingw
   - TARGET: rt
 
