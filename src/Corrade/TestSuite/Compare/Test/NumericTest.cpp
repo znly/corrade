@@ -64,6 +64,9 @@ void NumericTest::less() {
     CORRADE_VERIFY(!Comparator<Compare::Less<float>>{}(b, b));
     CORRADE_VERIFY(!Comparator<Compare::Less<float>>{}(c, b));
 
+    float zz = 12.0f;
+    CORRADE_COMPARE_AS(zz, 15.f/10, Compare::Less);
+
     std::stringstream out;
 
     {
