@@ -53,6 +53,7 @@ option(MSVC2017_COMPATIBILITY "Enable compatibility mode for MSVC 2017 (might di
 option(MSVC2015_COMPATIBILITY "Enable compatibility mode for MSVC 2015 (might disable some features)" OFF)
 
 option(WITH_INTERCONNECT "Build Interconnect library" ON)
+option(WITH_MAIN "Build Main wrapper library" ON)
 option(WITH_PLUGINMANAGER "Build PluginManager library" ON)
 option(WITH_TESTSUITE "Build TestSuite library" ON)
 cmake_dependent_option(WITH_UTILITY "Build Utility library" ON "NOT WITH_INTERCONNECT;NOT WITH_PLUGINMANAGER;NOT WITH_TESTSUITE" ON)

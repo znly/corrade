@@ -343,7 +343,7 @@ if(Corrade_FIND_COMPONENTS)
 endif()
 
 # Component distinction
-set(_CORRADE_LIBRARY_COMPONENTS "^(Containers|Interconnect|PluginManager|TestSuite|Utility)$")
+set(_CORRADE_LIBRARY_COMPONENTS "^(Containers|Interconnect|Main|PluginManager|TestSuite|Utility)$")
 set(_CORRADE_HEADER_ONLY_COMPONENTS "^(Containers)$")
 set(_CORRADE_EXECUTABLE_COMPONENTS "^(rc)$")
 
@@ -402,6 +402,23 @@ foreach(_component ${Corrade_FIND_COMPONENTS})
 
         # No special setup for Containers library
         # No special setup for Interconnect library
+
+        # Main library
+        if(_component STREQUAL Main)
+            if(CORRADE_TARGET_WINDOWS)
+                if(NOT MINGW)
+                    # Abusing INTERFACE_LINK_LIBRARIES because there is no
+                    # INTERFACE_LINK_OPTIONS yet. They treat things with `-` in
+                    # front as linker flags and fortunately I can use `-ENTRY`
+                    # instead of `/ENTRY`.
+                    # https://gitlab.kitware.com/cmake/cmake/issues/16543
+                    set_property(TARGET CorradeMain APPEND PROPERTY
+                        INTERFACE_LINK_LIBRARIES "-ENTRY:$<$<NOT:$<BOOL:$<TARGET_PROPERTY:WIN32_EXECUTABLE>>>:wmainCRTStartup>$<$<BOOL:$<TARGET_PROPERTY:WIN32_EXECUTABLE>>:wWinMainCRTStartup>")
+                else()
+                    set_property(TARGET CorradeMain APPEND PROPERTY
+                        INTERFACE_LINK_LIBRARIES "-municode")
+                endif()
+            endif()
 
         # PluginManager library
         if(_component STREQUAL PluginManager)

@@ -68,5 +68,44 @@ if(WITH_UTILITY)
     add_subdirectory(Utility)
 endif()
 
+if(WITH_MAIN)
+    add_library(CorradeMain STATIC CorradeMain.cpp)
+    target_include_directories(CorradeMain PRIVATE
+        ${PROJECT_SOURCE_DIR}/src
+        ${PROJECT_BINARY_DIR}/src)
+    # Require (at least) C++11 for users
+    if(NOT CMAKE_VERSION VERSION_LESS 3.0.0)
+        set_property(TARGET CorradeUtility PROPERTY
+            INTERFACE_CORRADE_CXX_STANDARD 11)
+        set_property(TARGET CorradeUtility APPEND PROPERTY
+            COMPATIBLE_INTERFACE_NUMBER_MAX CORRADE_CXX_STANDARD)
+    else()
+        # See FindCorrade.cmake for juicy rant about 2.8.12 and why can't I use
+        # single property name to cover all cases. AAAAAAAAARGH.
+        set_property(TARGET CorradeUtility PROPERTY
+            INTERFACE_CORRADE_CXX_STANDARD_ 11)
+        set_property(TARGET CorradeUtility APPEND PROPERTY
+            COMPATIBLE_INTERFACE_STRING CORRADE_CXX_STANDARD_)
+    endif()
+    set_target_properties(CorradeUtility PROPERTIES DEBUG_POSTFIX "-d")
+    if(CORRADE_TARGET_WINDOWS)
+        if(NOT MINGW)
+            # Abusing INTERFACE_LINK_LIBRARIES because there is no
+            # INTERFACE_LINK_OPTIONS yet. They treat things with `-` in front
+            # as linker flags and fortunately I can use `-ENTRY` instead of
+            # `/ENTRY`. https://gitlab.kitware.com/cmake/cmake/issues/16543
+            set_property(TARGET CorradeMain APPEND PROPERTY
+                INTERFACE_LINK_LIBRARIES "-ENTRY:$<$<NOT:$<BOOL:$<TARGET_PROPERTY:WIN32_EXECUTABLE>>>:wmainCRTStartup>$<$<BOOL:$<TARGET_PROPERTY:WIN32_EXECUTABLE>>:wWinMainCRTStartup>")
+        else()
+            set_property(TARGET CorradeMain APPEND PROPERTY
+                INTERFACE_LINK_LIBRARIES "-municode")
+        endif()
+    endif()
+    install(TARGETS CorradeMain
+        RUNTIME DESTINATION ${CORRADE_BINARY_INSTALL_DIR}
+        LIBRARY DESTINATION ${CORRADE_LIBRARY_INSTALL_DIR}
+        ARCHIVE DESTINATION ${CORRADE_LIBRARY_INSTALL_DIR})
+endif()
+
 # Corrade configure file for superprojects
 set(_CORRADE_CONFIGURE_FILE ${CMAKE_CURRENT_BINARY_DIR}/configure.h CACHE INTERNAL "")
